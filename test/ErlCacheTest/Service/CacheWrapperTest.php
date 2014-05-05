@@ -11,7 +11,10 @@
  */
 
 namespace ErlCache\test\ErlCacheTest\Service;
+
 use ErlCache\Service\CacheWrapper;
+use ErlMutex\Service\Mutex;
+use Zend\Cache\Storage\Adapter\Memcached;
 
 /**
  * Class CacheWrapperTest
@@ -26,7 +29,7 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->erlCache = \Bootstrap::getServiceManager()->get('MutexCache');
+        $this->erlCache = new CacheWrapper(new Memcached(), new Mutex());
     }
 
     public function tearDown()
