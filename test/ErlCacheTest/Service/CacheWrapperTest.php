@@ -29,7 +29,14 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->erlCache = new CacheWrapper(new Memcached(), new Mutex());
+        $options = array(
+            'namespace' => 'erl-cache-test',
+            'servers'   => array(
+                array('localhost', 11211),
+            ),
+        );
+
+        $this->erlCache = new CacheWrapper(new Memcached($options), new Mutex());
     }
 
     public function tearDown()
