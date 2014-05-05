@@ -1,2 +1,6 @@
 .idea
 test/log/
+vendor
+composer.phar
+composer.lock
+.DS_Store

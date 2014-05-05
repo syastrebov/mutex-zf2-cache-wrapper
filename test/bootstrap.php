@@ -1,8 +1,7 @@
 <?php
 
-chdir(dirname(__DIR__ . '/../../../../public'));
 
-require __DIR__ . '/../../../../init_autoloader.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mvc\Service\ServiceManagerConfig;
@@ -23,10 +22,6 @@ class Bootstrap
     public static function init()
     {
         self::$serviceManager = new ServiceManager(new ServiceManagerConfig());
-        self::$serviceManager
-            ->setService('ApplicationConfig', include __DIR__ . '/../../../../config/application.config.php')
-            ->get('ModuleManager')
-            ->loadModules();
     }
 
     /**

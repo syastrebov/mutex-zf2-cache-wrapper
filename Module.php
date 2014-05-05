@@ -47,7 +47,7 @@ class Module
             'factories' => array(
                 'MutexService' => function(ServiceManager $serviceManager) {
                     $config  = $serviceManager->get('Config');
-                    $config  = $config['erl_cache'];
+                    $config  = $config['erl']['cache'];
                     /** @var Request $request */
                     $request = $serviceManager->get('Request');
                     /** @var Adapter $adapter */
