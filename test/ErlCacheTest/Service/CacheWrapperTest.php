@@ -27,6 +27,10 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
      */
     private $erlCache;
 
+    /**
+     * Получить ссылку на объект кеша с использованием мьютекса
+     * Используется memcached
+     */
     public function setUp()
     {
         $options = array(
@@ -39,6 +43,9 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
         $this->erlCache = new CacheWrapper(new Memcached($options), new Mutex());
     }
 
+    /**
+     * Удалить ссылку на кеш
+     */
     public function tearDown()
     {
         $this->erlCache = null;
@@ -64,6 +71,7 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
             'key2' => 'val2',
         );
 
+        $this->erlCache->removeItems(array_keys($values));
         $this->assertEmpty($this->erlCache->addItems($values));
         $this->assertEmpty($this->erlCache->removeItems(array_keys($values)));
         $this->assertEmpty($this->erlCache->hasItems(array_keys($values)));
@@ -129,6 +137,43 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetItems()
     {
+        $values = array(
+            'key1' => 'val1',
+            'key2' => 'val2',
+        );
 
+        $this->assertEmpty($this->erlCache->getItems(array_keys($values)));
+        $this->assertEmpty($this->erlCache->setItems($values));
+        $this->assertEquals($values, $this->erlCache->getItems(array_keys($values)));
+    }
+
+    /**
+     * Тестирование замены элемента
+     */
+    public function testReplaceItem()
+    {
+        $this->assertFalse($this->erlCache->removeItem(__FUNCTION__));
+        $this->assertFalse($this->erlCache->replaceItem(__FUNCTION__, 'my val'));
+        $this->assertFalse($this->erlCache->removeItem(__FUNCTION__));
+        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val'));
+        $this->assertTrue($this->erlCache->replaceItem(__FUNCTION__, 'my val'));
+        $this->assertTrue($this->erlCache->removeItem(__FUNCTION__));
+    }
+
+    /**
+     * Тестирование замены элементов
+     */
+    public function testReplaceItems()
+    {
+        $values = array(
+            'key1' => 'val1',
+            'key2' => 'val2',
+        );
+
+        $this->erlCache->removeItems(array_keys($values));
+        $this->assertEquals(array_keys($values), $this->erlCache->replaceItems($values));
+        $this->assertEmpty($this->erlCache->setItems($values));
+        $this->assertEmpty($this->erlCache->replaceItems($values));
+        $this->assertEmpty($this->erlCache->removeItems(array_keys($values)));
     }
 } 
