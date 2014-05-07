@@ -45,7 +45,7 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Тестирование удаления элемента
+     * Тестирование удаления и добавления элемента
      */
     public function testRemoveItem()
     {
@@ -55,7 +55,7 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Тестирование удаления элементов
+     * Тестирование удаления и добавления элементов
      */
     public function testRemoveAddItems()
     {
@@ -81,5 +81,54 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->erlCache->hasItem(__FUNCTION__));
 
         $this->assertFalse($this->erlCache->addItem(__FUNCTION__, 'my val'));
+    }
+
+    /**
+     * Тестирование удаление и установка элемента
+     */
+    public function testRemoveSetItem()
+    {
+        $this->erlCache->removeItem(__FUNCTION__);
+        $this->assertFalse($this->erlCache->hasItem(__FUNCTION__));
+
+        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val'));
+        $this->assertTrue($this->erlCache->hasItem(__FUNCTION__));
+
+        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val'));
+    }
+
+    /**
+     * Тестирование удаления и добавления элементов
+     */
+    public function testRemoveSetItems()
+    {
+        $values = array(
+            'key1' => 'val1',
+            'key2' => 'val2',
+        );
+
+        $this->assertEmpty($this->erlCache->setItems($values));
+        $this->assertEmpty($this->erlCache->setItems($values));
+        $this->assertEmpty($this->erlCache->removeItems(array_keys($values)));
+        $this->assertEmpty($this->erlCache->hasItems(array_keys($values)));
+    }
+
+    /**
+     * Тестирование получения элемента
+     */
+    public function testGetItem()
+    {
+        $this->erlCache->removeItem(__FUNCTION__);
+        $this->assertNull($this->erlCache->getItem(__FUNCTION__));
+        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val'));
+        $this->assertEquals('my val', $this->erlCache->getItem(__FUNCTION__));
+    }
+
+    /**
+     * Тестирование получения элементов
+     */
+    public function testGetItems()
+    {
+
     }
 } 
