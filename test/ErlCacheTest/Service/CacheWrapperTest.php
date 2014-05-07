@@ -176,4 +176,12 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($this->erlCache->replaceItems($values));
         $this->assertEmpty($this->erlCache->removeItems(array_keys($values)));
     }
+
+    /**
+     *
+     */
+    public function testTouchItem()
+    {
+        $this->erlCache->touchItem(__FUNCTION__);
+    }
 } 
