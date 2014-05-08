@@ -35,6 +35,7 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     {
         $options = array(
             'namespace' => 'erl-cache-test',
+            'ttl'       => '2',
             'servers'   => array(
                 array('localhost', 11211),
             ),
@@ -178,10 +179,69 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
+     * Тестирование сбрасывания времени жизни элемента
      */
     public function testTouchItem()
     {
-        $this->erlCache->touchItem(__FUNCTION__);
+        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val'));
+        $this->assertTrue($this->erlCache->hasItem(__FUNCTION__));
+        sleep(2);
+        $this->assertFalse($this->erlCache->touchItem(__FUNCTION__));
+        $this->assertFalse($this->erlCache->hasItem(__FUNCTION__));
+
+        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val'));
+        sleep(1);
+        $this->assertTrue($this->erlCache->touchItem(__FUNCTION__));
+        sleep(1);
+        $this->assertTrue($this->erlCache->hasItem(__FUNCTION__));
+    }
+
+    /**
+     * Тестирование сбрасывания времени жизни элементов
+     */
+    public function testTouchItems()
+    {
+        $values = array(
+            'key1' => 'val1',
+            'key2' => 'val2',
+        );
+
+        $this->assertEquals(array_keys($values), $this->erlCache->touchItems(array_keys($values)));
+        $this->assertEmpty($this->erlCache->setItems($values));
+        sleep(2);
+        $this->assertEquals(array_keys($values), $this->erlCache->touchItems(array_keys($values)));
+        $this->assertEmpty($this->erlCache->setItems($values));
+        sleep(1);
+        $this->assertEmpty($this->erlCache->touchItems(array_keys($values)));
+        sleep(1);
+        $this->assertEquals(array_keys($values), $this->erlCache->hasItems(array_keys($values)));
+    }
+
+    /**
+     * Сброс незанятой блокировки
+     *
+     * @expectedException \Exception
+     */
+    public function testReleaseNotAcquired()
+    {
+        $this->callPrivateMethod($this->erlCache, 'release', __FUNCTION__);
+    }
+
+    /**
+     * Тестируем приватные методы
+     *
+     * @param object $object
+     * @param string $methodName
+     *
+     * @return mixed
+     */
+    private function callPrivateMethod($object, $methodName)
+    {
+        $reflectionClass = new \ReflectionClass($object);
+        $reflectionMethod = $reflectionClass->getMethod($methodName);
+        $reflectionMethod->setAccessible(true);
+
+        $params = array_slice(func_get_args(), 2);
+        return $reflectionMethod->invokeArgs($object, $params);
     }
 } 
