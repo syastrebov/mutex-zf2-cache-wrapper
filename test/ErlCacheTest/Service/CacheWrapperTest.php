@@ -57,9 +57,9 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveItem()
     {
-        $this->assertFalse($this->erlCache->removeItem(__FUNCTION__));
-        $this->assertTrue($this->erlCache->addItem(__FUNCTION__, 'my val'));
-        $this->assertTrue($this->erlCache->removeItem(__FUNCTION__));
+        $this->assertFalse($this->erlCache->removeItem(__CLASS__ . __FUNCTION__));
+        $this->assertTrue($this->erlCache->addItem(__CLASS__ . __FUNCTION__, 'my val'));
+        $this->assertTrue($this->erlCache->removeItem(__CLASS__ . __FUNCTION__));
     }
 
     /**
@@ -68,8 +68,8 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     public function testRemoveAddItems()
     {
         $values = array(
-            __FUNCTION__ . 'key1' => 'val1',
-            __FUNCTION__ . 'key2' => 'val2',
+            __CLASS__ . __FUNCTION__ . 'key1' => 'val1',
+            __CLASS__ . __FUNCTION__ . 'key2' => 'val2',
         );
 
         $this->erlCache->removeItems(array_keys($values));
@@ -83,13 +83,13 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveAddItem()
     {
-        $this->erlCache->removeItem(__FUNCTION__);
-        $this->assertFalse($this->erlCache->hasItem(__FUNCTION__));
+        $this->erlCache->removeItem(__CLASS__ . __FUNCTION__);
+        $this->assertFalse($this->erlCache->hasItem(__CLASS__ . __FUNCTION__));
 
-        $this->assertTrue($this->erlCache->addItem(__FUNCTION__, 'my val'));
-        $this->assertTrue($this->erlCache->hasItem(__FUNCTION__));
+        $this->assertTrue($this->erlCache->addItem(__CLASS__ . __FUNCTION__, 'my val'));
+        $this->assertTrue($this->erlCache->hasItem(__CLASS__ . __FUNCTION__));
 
-        $this->assertFalse($this->erlCache->addItem(__FUNCTION__, 'my val'));
+        $this->assertFalse($this->erlCache->addItem(__CLASS__ . __FUNCTION__, 'my val'));
     }
 
     /**
@@ -97,13 +97,13 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveSetItem()
     {
-        $this->erlCache->removeItem(__FUNCTION__);
-        $this->assertFalse($this->erlCache->hasItem(__FUNCTION__));
+        $this->erlCache->removeItem(__CLASS__ . __FUNCTION__);
+        $this->assertFalse($this->erlCache->hasItem(__CLASS__ . __FUNCTION__));
 
-        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val'));
-        $this->assertTrue($this->erlCache->hasItem(__FUNCTION__));
+        $this->assertTrue($this->erlCache->setItem(__CLASS__ . __FUNCTION__, 'my val'));
+        $this->assertTrue($this->erlCache->hasItem(__CLASS__ . __FUNCTION__));
 
-        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val'));
+        $this->assertTrue($this->erlCache->setItem(__CLASS__ . __FUNCTION__, 'my val'));
     }
 
     /**
@@ -112,8 +112,8 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     public function testRemoveSetItems()
     {
         $values = array(
-            __FUNCTION__ . 'key1' => 'val1',
-            __FUNCTION__ . 'key2' => 'val2',
+            __CLASS__ . __FUNCTION__ . 'key1' => 'val1',
+            __CLASS__ . __FUNCTION__ . 'key2' => 'val2',
         );
 
         $this->assertEmpty($this->erlCache->setItems($values));
@@ -127,10 +127,10 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetItem()
     {
-        $this->erlCache->removeItem(__FUNCTION__);
-        $this->assertNull($this->erlCache->getItem(__FUNCTION__));
-        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val'));
-        $this->assertEquals('my val', $this->erlCache->getItem(__FUNCTION__));
+        $this->erlCache->removeItem(__CLASS__ . __FUNCTION__);
+        $this->assertNull($this->erlCache->getItem(__CLASS__ . __FUNCTION__));
+        $this->assertTrue($this->erlCache->setItem(__CLASS__ . __FUNCTION__, 'my val'));
+        $this->assertEquals('my val', $this->erlCache->getItem(__CLASS__ . __FUNCTION__));
     }
 
     /**
@@ -139,8 +139,8 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     public function testGetItems()
     {
         $values = array(
-            __FUNCTION__ . 'key1' => 'val1',
-            __FUNCTION__ . 'key2' => 'val2',
+            __CLASS__ . __FUNCTION__ . 'key1' => 'val1',
+            __CLASS__ . __FUNCTION__ . 'key2' => 'val2',
         );
 
         $this->assertEmpty($this->erlCache->getItems(array_keys($values)));
@@ -153,12 +153,12 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testReplaceItem()
     {
-        $this->assertFalse($this->erlCache->removeItem(__FUNCTION__));
-        $this->assertFalse($this->erlCache->replaceItem(__FUNCTION__, 'my val'));
-        $this->assertFalse($this->erlCache->removeItem(__FUNCTION__));
-        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val'));
-        $this->assertTrue($this->erlCache->replaceItem(__FUNCTION__, 'my val'));
-        $this->assertTrue($this->erlCache->removeItem(__FUNCTION__));
+        $this->assertFalse($this->erlCache->removeItem(__CLASS__ . __FUNCTION__));
+        $this->assertFalse($this->erlCache->replaceItem(__CLASS__ . __FUNCTION__, 'my val'));
+        $this->assertFalse($this->erlCache->removeItem(__CLASS__ . __FUNCTION__));
+        $this->assertTrue($this->erlCache->setItem(__CLASS__ . __FUNCTION__, 'my val'));
+        $this->assertTrue($this->erlCache->replaceItem(__CLASS__ . __FUNCTION__, 'my val'));
+        $this->assertTrue($this->erlCache->removeItem(__CLASS__ . __FUNCTION__));
     }
 
     /**
@@ -167,8 +167,8 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     public function testReplaceItems()
     {
         $values = array(
-            __FUNCTION__ . 'key1' => 'val1',
-            __FUNCTION__ . 'key2' => 'val2',
+            __CLASS__ . __FUNCTION__ . 'key1' => 'val1',
+            __CLASS__ . __FUNCTION__ . 'key2' => 'val2',
         );
 
         $this->erlCache->removeItems(array_keys($values));
@@ -183,17 +183,17 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testTouchItem()
     {
-        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val'));
-        $this->assertTrue($this->erlCache->hasItem(__FUNCTION__));
+        $this->assertTrue($this->erlCache->setItem(__CLASS__ . __FUNCTION__, 'my val'));
+        $this->assertTrue($this->erlCache->hasItem(__CLASS__ . __FUNCTION__));
         sleep(2);
-        $this->assertFalse($this->erlCache->touchItem(__FUNCTION__));
-        $this->assertFalse($this->erlCache->hasItem(__FUNCTION__));
+        $this->assertFalse($this->erlCache->touchItem(__CLASS__ . __FUNCTION__));
+        $this->assertFalse($this->erlCache->hasItem(__CLASS__ . __FUNCTION__));
 
-        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val'));
+        $this->assertTrue($this->erlCache->setItem(__CLASS__ . __FUNCTION__, 'my val'));
         sleep(1);
-        $this->assertTrue($this->erlCache->touchItem(__FUNCTION__));
+        $this->assertTrue($this->erlCache->touchItem(__CLASS__ . __FUNCTION__));
         sleep(1);
-        $this->assertTrue($this->erlCache->hasItem(__FUNCTION__));
+        $this->assertTrue($this->erlCache->hasItem(__CLASS__ . __FUNCTION__));
     }
 
     /**
@@ -202,8 +202,8 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     public function testTouchItems()
     {
         $values = array(
-            __FUNCTION__ . 'key1' => 'val1',
-            __FUNCTION__ . 'key2' => 'val2',
+            __CLASS__ . __FUNCTION__ . 'key1' => 'val1',
+            __CLASS__ . __FUNCTION__ . 'key2' => 'val2',
         );
 
         $this->erlCache->removeItems(array_keys($values));
@@ -223,8 +223,8 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testIncrementItem()
     {
-        $this->assertEquals(5, $this->erlCache->incrementItem(__FUNCTION__, 5));
-        $this->assertEquals(10, $this->erlCache->incrementItem(__FUNCTION__, 5));
+        $this->assertEquals(5, $this->erlCache->incrementItem(__CLASS__ . __FUNCTION__, 5));
+        $this->assertEquals(10, $this->erlCache->incrementItem(__CLASS__ . __FUNCTION__, 5));
     }
 
     /**
@@ -234,8 +234,8 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testIncrementNotNumberItem()
     {
-        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val'));
-        $this->erlCache->incrementItem(__FUNCTION__, 5);
+        $this->assertTrue($this->erlCache->setItem(__CLASS__ . __FUNCTION__, 'my val'));
+        $this->erlCache->incrementItem(__CLASS__ . __FUNCTION__, 5);
     }
 
     /**
@@ -244,13 +244,13 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     public function testIncrementNotNumberItems()
     {
         $values = array(
-            __FUNCTION__ . 'key1' => 'val1',
-            __FUNCTION__ . 'key2' => 'val2',
+            __CLASS__ . __FUNCTION__ . 'key1' => 'val1',
+            __CLASS__ . __FUNCTION__ . 'key2' => 'val2',
         );
 
         $expected = array(
-            __FUNCTION__ . 'key1' => 0,
-            __FUNCTION__ . 'key2' => 0,
+            __CLASS__ . __FUNCTION__ . 'key1' => 0,
+            __CLASS__ . __FUNCTION__ . 'key2' => 0,
         );
 
         $this->erlCache->incrementItems($values);
@@ -263,12 +263,12 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     public function testIncrementItems()
     {
         $values = array(
-            __FUNCTION__ . 'key1' => 5,
-            __FUNCTION__ . 'key2' => 5,
+            __CLASS__ . __FUNCTION__ . 'key1' => 5,
+            __CLASS__ . __FUNCTION__ . 'key2' => 5,
         );
 
         $this->erlCache->incrementItems($values);
-        $this->assertEquals(5, $this->erlCache->getItem(__FUNCTION__ . 'key1'));
+        $this->assertEquals(5, $this->erlCache->getItem(__CLASS__ . __FUNCTION__ . 'key1'));
     }
 
     /**
@@ -276,7 +276,7 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testDecrementItem()
     {
-        $this->assertEquals(-5, $this->erlCache->decrementItem(__FUNCTION__, 5));
+        $this->assertEquals(-5, $this->erlCache->decrementItem(__CLASS__ . __FUNCTION__, 5));
     }
 
     /**
@@ -285,13 +285,13 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     public function testDecrementItems()
     {
         $values = array(
-            __FUNCTION__ . 'key1' => 5,
-            __FUNCTION__ . 'key2' => 5,
+            __CLASS__ . __FUNCTION__ . 'key1' => 5,
+            __CLASS__ . __FUNCTION__ . 'key2' => 5,
         );
 
         $expected = array(
-            __FUNCTION__ . 'key1' => -5,
-            __FUNCTION__ . 'key2' => -5,
+            __CLASS__ . __FUNCTION__ . 'key1' => -5,
+            __CLASS__ . __FUNCTION__ . 'key2' => -5,
         );
 
         $this->assertEquals($expected, $this->erlCache->decrementItems($values));
@@ -305,17 +305,31 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
         $success = false;
         $token   = null;
 
-        $this->assertNull($this->erlCache->getItem(__FUNCTION__, $success, $token));
+        $this->assertNull($this->erlCache->getItem(__CLASS__ . __FUNCTION__, $success, $token));
         $this->assertNull($token);
 
-        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val 1'));
-        $this->assertEquals('my val 1', $this->erlCache->getItem(__FUNCTION__, $success, $token));
+        $this->assertTrue($this->erlCache->setItem(__CLASS__ . __FUNCTION__, 'my val 1'));
+        $this->assertEquals('my val 1', $this->erlCache->getItem(__CLASS__ . __FUNCTION__, $success, $token));
 
-        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val 2'));
-        $this->assertFalse($this->erlCache->checkAndSetItem($token, __FUNCTION__, 'my val'));
+        $this->assertTrue($this->erlCache->setItem(__CLASS__ . __FUNCTION__, 'my val 2'));
+        $this->assertFalse($this->erlCache->checkAndSetItem($token, __CLASS__ . __FUNCTION__, 'my val'));
 
-        $this->assertEquals('my val 2', $this->erlCache->getItem(__FUNCTION__, $success, $token));
-        $this->assertTrue($this->erlCache->checkAndSetItem($token, __FUNCTION__, 'my val'));
+        $this->assertEquals('my val 2', $this->erlCache->getItem(__CLASS__ . __FUNCTION__, $success, $token));
+        $this->assertTrue($this->erlCache->checkAndSetItem($token, __CLASS__ . __FUNCTION__, 'my val'));
+    }
+
+    /**
+     * Тестирование текущих занятых ключей mutex'a
+     */
+    public function testGetActiveKeys()
+    {
+        $this->assertEmpty($this->erlCache->getActiveKeys());
+        $this->assertFalse($this->erlCache->hasItem(__CLASS__ . __FUNCTION__));
+        $this->assertEquals(array(__CLASS__ . __FUNCTION__), $this->erlCache->getActiveKeys());
+        $this->assertNull($this->erlCache->getItem(__CLASS__ . __FUNCTION__));
+        $this->assertEquals(array(__CLASS__ . __FUNCTION__), $this->erlCache->getActiveKeys());
+        $this->assertTrue($this->erlCache->setItem(__CLASS__ . __FUNCTION__, 'my val'));
+        $this->assertEmpty($this->erlCache->getActiveKeys());
     }
 
     /**
@@ -325,7 +339,7 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
      */
     public function testReleaseNotAcquired()
     {
-        $this->callPrivateMethod($this->erlCache, 'release', __FUNCTION__);
+        $this->callPrivateMethod($this->erlCache, 'release', __CLASS__ . __FUNCTION__);
     }
 
     /**
