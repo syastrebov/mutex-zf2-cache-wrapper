@@ -298,6 +298,27 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Тестирование метода установки элемента, если он не был изменен
+     */
+    public function testCheckAndSetItem()
+    {
+        $success = false;
+        $token   = null;
+
+        $this->assertNull($this->erlCache->getItem(__FUNCTION__, $success, $token));
+        $this->assertNull($token);
+
+        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val 1'));
+        $this->assertEquals('my val 1', $this->erlCache->getItem(__FUNCTION__, $success, $token));
+
+        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val 2'));
+        $this->assertFalse($this->erlCache->checkAndSetItem($token, __FUNCTION__, 'my val'));
+
+        $this->assertEquals('my val 2', $this->erlCache->getItem(__FUNCTION__, $success, $token));
+        $this->assertTrue($this->erlCache->checkAndSetItem($token, __FUNCTION__, 'my val'));
+    }
+
+    /**
      * Сброс незанятой блокировки
      *
      * @expectedException \Exception
