@@ -218,6 +218,26 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Тестирование увеличения значения элемента
+     */
+    public function testIncrementItem()
+    {
+        $this->assertEquals(5, $this->erlCache->incrementItem(__FUNCTION__, 5));
+        $this->assertEquals(10, $this->erlCache->incrementItem(__FUNCTION__, 5));
+    }
+
+    /**
+     * Тестирование увеличения значения нечислового элемента
+     *
+     * @expectedException \Zend\Cache\Exception\RuntimeException
+     */
+    public function testIncrementNotNumberItem()
+    {
+        $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val'));
+        $this->assertEquals(5, $this->erlCache->incrementItem(__FUNCTION__, 5));
+    }
+
+    /**
      * Сброс незанятой блокировки
      *
      * @expectedException \Exception
