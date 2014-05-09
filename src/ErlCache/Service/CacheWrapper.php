@@ -64,6 +64,7 @@ class CacheWrapper implements StorageInterface
     public function setOptions($options)
     {
         $this->storage->setOptions($options);
+        return $this;
     }
 
     /**
