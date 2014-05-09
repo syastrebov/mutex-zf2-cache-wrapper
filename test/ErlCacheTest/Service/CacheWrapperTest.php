@@ -68,8 +68,8 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     public function testRemoveAddItems()
     {
         $values = array(
-            'key1' => 'val1',
-            'key2' => 'val2',
+            __FUNCTION__ . 'key1' => 'val1',
+            __FUNCTION__ . 'key2' => 'val2',
         );
 
         $this->erlCache->removeItems(array_keys($values));
@@ -112,8 +112,8 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     public function testRemoveSetItems()
     {
         $values = array(
-            'key1' => 'val1',
-            'key2' => 'val2',
+            __FUNCTION__ . 'key1' => 'val1',
+            __FUNCTION__ . 'key2' => 'val2',
         );
 
         $this->assertEmpty($this->erlCache->setItems($values));
@@ -139,8 +139,8 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     public function testGetItems()
     {
         $values = array(
-            'key1' => 'val1',
-            'key2' => 'val2',
+            __FUNCTION__ . 'key1' => 'val1',
+            __FUNCTION__ . 'key2' => 'val2',
         );
 
         $this->assertEmpty($this->erlCache->getItems(array_keys($values)));
@@ -167,8 +167,8 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     public function testReplaceItems()
     {
         $values = array(
-            'key1' => 'val1',
-            'key2' => 'val2',
+            __FUNCTION__ . 'key1' => 'val1',
+            __FUNCTION__ . 'key2' => 'val2',
         );
 
         $this->erlCache->removeItems(array_keys($values));
@@ -202,10 +202,11 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     public function testTouchItems()
     {
         $values = array(
-            'key1' => 'val1',
-            'key2' => 'val2',
+            __FUNCTION__ . 'key1' => 'val1',
+            __FUNCTION__ . 'key2' => 'val2',
         );
 
+        $this->erlCache->removeItems(array_keys($values));
         $this->assertEquals(array_keys($values), $this->erlCache->touchItems(array_keys($values)));
         $this->assertEmpty($this->erlCache->setItems($values));
         sleep(2);
@@ -234,7 +235,40 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     public function testIncrementNotNumberItem()
     {
         $this->assertTrue($this->erlCache->setItem(__FUNCTION__, 'my val'));
-        $this->assertEquals(5, $this->erlCache->incrementItem(__FUNCTION__, 5));
+        $this->erlCache->incrementItem(__FUNCTION__, 5);
+    }
+
+    /**
+     * Тестирование увеличения значения нечисловых элементов
+     */
+    public function testIncrementNotNumberItems()
+    {
+        $values = array(
+            __FUNCTION__ . 'key1' => 'val1',
+            __FUNCTION__ . 'key2' => 'val2',
+        );
+
+        $expected = array(
+            __FUNCTION__ . 'key1' => 0,
+            __FUNCTION__ . 'key2' => 0,
+        );
+
+        $this->erlCache->incrementItems($values);
+        $this->assertEquals($expected, $this->erlCache->getItems(array_keys($values)));
+    }
+
+    /**
+     * Тестирование увеличения значения нечисловых элементов
+     */
+    public function testIncrementItems()
+    {
+        $values = array(
+            __FUNCTION__ . 'key1' => 5,
+            __FUNCTION__ . 'key2' => 5,
+        );
+
+        $this->erlCache->incrementItems($values);
+        $this->assertEquals(5, $this->erlCache->getItem(__FUNCTION__ . 'key1'));
     }
 
     /**
