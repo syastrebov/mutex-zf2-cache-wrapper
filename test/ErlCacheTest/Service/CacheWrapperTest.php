@@ -272,6 +272,14 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Тестирование уменьшения значения элемента
+     */
+    public function testDecrementItem()
+    {
+        $this->assertEquals(-5, $this->erlCache->decrementItem(__FUNCTION__, 5));
+    }
+
+    /**
      * Сброс незанятой блокировки
      *
      * @expectedException \Exception
