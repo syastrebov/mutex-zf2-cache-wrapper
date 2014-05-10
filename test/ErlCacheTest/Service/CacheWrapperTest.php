@@ -363,6 +363,31 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Тестирование получения метаданных элемента
+     */
+    public function testGetMetadata()
+    {
+        $this->assertFalse($this->erlCache->getMetadata(__CLASS__ . __FUNCTION__));
+        $this->assertTrue($this->erlCache->setItem(__CLASS__ . __FUNCTION__, 'my val'));
+        $this->assertInternalType('array', $this->erlCache->getMetadata(__CLASS__ . __FUNCTION__));
+    }
+
+    /**
+     * Тестирование получения метаданных элементов
+     */
+    public function testGetMetadatas()
+    {
+        $values = array(
+            __CLASS__ . __FUNCTION__ . 'key1' => 5,
+            __CLASS__ . __FUNCTION__ . 'key2' => 5,
+        );
+
+        $this->assertEmpty($this->erlCache->getMetadatas(array_values($values)));
+        $this->assertEmpty($this->erlCache->setItems($values));
+        $this->assertInternalType('array', $this->erlCache->getMetadatas(array_values($values)));
+    }
+
+    /**
      * Сброс незанятой блокировки
      *
      * @expectedException \Exception
