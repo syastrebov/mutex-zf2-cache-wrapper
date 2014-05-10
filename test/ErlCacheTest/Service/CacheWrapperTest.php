@@ -53,6 +53,28 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Тестирование изменения настроек
+     */
+    public function testSetOptions()
+    {
+        $this->erlCache->setOptions(array(
+            'namespace' => 'erl-cache-test',
+            'ttl'       => '2',
+            'servers'   => array(
+                array('localhost', 11211),
+            ),
+        ));
+    }
+
+    /**
+     * Тестирование получения настроек
+     */
+    public function testGetOptions()
+    {
+        $this->assertInstanceOf('\Zend\Cache\Storage\Adapter\AdapterOptions', $this->erlCache->getOptions());
+    }
+
+    /**
      * Тестирование удаления и добавления элемента
      */
     public function testRemoveItem()
@@ -330,6 +352,14 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array(__CLASS__ . __FUNCTION__), $this->erlCache->getActiveKeys());
         $this->assertTrue($this->erlCache->setItem(__CLASS__ . __FUNCTION__, 'my val'));
         $this->assertEmpty($this->erlCache->getActiveKeys());
+    }
+
+    /**
+     * Тестирование получения возможностей кэша
+     */
+    public function testGetCapabilities()
+    {
+        $this->assertInstanceOf('Zend\Cache\Storage\Capabilities', $this->erlCache->getCapabilities());
     }
 
     /**
