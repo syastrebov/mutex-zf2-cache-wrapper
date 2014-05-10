@@ -41,7 +41,10 @@ class CacheWrapperTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $this->erlCache = new CacheWrapper(new Memcached($options), new Mutex());
+        $mutex = new Mutex();
+        $mutex->establishConnection();
+
+        $this->erlCache = new CacheWrapper(new Memcached($options), $mutex);
     }
 
     /**
