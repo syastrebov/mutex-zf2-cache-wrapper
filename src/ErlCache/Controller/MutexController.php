@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Controller;
+namespace ErlCache\Controller;
 
 use ErlMutex\Service\Mutex;
 use Zend\Mvc\Controller\AbstractActionController;
