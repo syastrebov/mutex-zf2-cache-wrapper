@@ -49,7 +49,6 @@ PHP-Erlang Mutex (Zend Framework 2 cache wrapper module)
 ##Установка для zf2 (установка вместе с zend skeleton) ##
 
 ```json
-
 {
     "name": "zendframework/skeleton-application",
     "description": "Skeleton Application for ZF2",
@@ -103,5 +102,105 @@ PHP-Erlang Mutex (Zend Framework 2 cache wrapper module)
             }
         }
     ]
+}
+```
+
+=====
+
+##Пример использования##
+
+
+Настройка кеша, Application/Module.php:
+
+```php
+namespace Application;
+
+use Zend\Mvc\ModuleRouteListener;
+use Zend\Mvc\MvcEvent;
+use Zend\Cache as Cache;
+
+class Module
+{
+    public function onBootstrap(MvcEvent $e)
+    {
+        $eventManager        = $e->getApplication()->getEventManager();
+        $moduleRouteListener = new ModuleRouteListener();
+        $moduleRouteListener->attach($eventManager);
+    }
+
+    public function getConfig()
+    {
+        return include __DIR__ . '/config/module.config.php';
+    }
+
+    public function getAutoloaderConfig()
+    {
+        return array(
+            'Zend\Loader\StandardAutoloader' => array(
+                'namespaces' => array(
+                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
+                ),
+            ),
+        );
+    }
+
+    public function getServiceConfig()
+    {
+        return array(
+            'factories' => array(
+                'Cache' => function() {
+                    return Cache\StorageFactory::factory(array(
+                        'adapter' => array(
+                            'name' => 'filesystem'
+                        ),
+                        'plugins' => array(
+                            'exception_handler' => array(
+                                'throw_exceptions' => true
+                            ),
+                        )
+                    ));
+                },
+            ),
+        );
+    }
+}
+```
+
+Application/Controller/IndexController.php:
+
+```php
+namespace Application\Controller;
+
+use ErlCache\Service\CacheWrapper;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\View\Model\ViewModel;
+
+class IndexController extends AbstractActionController
+{
+    public function indexAction()
+    {
+        /** @var CacheWrapper $mutexCache */
+        $mutexCache = $this->getServiceLocator()->get('MutexCache');
+        $key = 'A';
+
+        $clear = (bool)$this->params()->fromQuery('clear', false);
+        if ($clear) {
+            if ($mutexCache->hasItem($key)) {
+                $mutexCache->removeItem($key);
+            }
+        }
+        if ($mutexCache->hasItem($key)) {
+            var_dump('from cache');
+            $value = $mutexCache->getItem($key);
+        } else {
+            var_dump('from db');
+            $value = 'my val';
+            sleep(10);
+            $mutexCache->setItem($key, $value);
+        }
+
+        var_dump($value);
+        return new ViewModel();
+    }
 }
 ```
