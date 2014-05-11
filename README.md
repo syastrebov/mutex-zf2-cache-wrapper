@@ -42,6 +42,7 @@ PHP-Erlang Mutex (Zend Framework 2 cache wrapper module)
         }
     }]
 }
+```
 
 =====
 
@@ -103,4 +104,4 @@ PHP-Erlang Mutex (Zend Framework 2 cache wrapper module)
         }
     ]
 }
-
+```
