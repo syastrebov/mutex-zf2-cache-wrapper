@@ -3,7 +3,7 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            'ErlCache\Controller\Mutex' => 'ErlCache\Controller\MutexController',
+            'ErlCache\Controller\Console' => 'ErlCache\Controller\ConsoleController',
         ),
     ),
     'console' => array(
@@ -13,7 +13,7 @@ return array(
                     'options' => array(
                         'route'    => 'mutex generate map',
                         'defaults' => array(
-                            'controller' => 'ErlCache\Controller\Mutex',
+                            'controller' => 'ErlCache\Controller\Console',
                             'action'     => 'generateMap',
                         ),
                     ),
@@ -22,7 +22,7 @@ return array(
                     'options' => array(
                         'route'    => 'mutex clear profiler log',
                         'defaults' => array(
-                            'controller' => 'ErlCache\Controller\Mutex',
+                            'controller' => 'ErlCache\Controller\Console',
                             'action'     => 'clearProfilerLog',
                         ),
                     ),

@@ -9,7 +9,7 @@ use Zend\Mvc\Controller\AbstractActionController;
  * Class MutexController
  * @package Application\Controller
  */
-class MutexController extends AbstractActionController
+class ConsoleController extends AbstractActionController
 {
     /**
      * Карта вызова блокировок
