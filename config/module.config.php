@@ -30,13 +30,4 @@ return array(
             ),
         ),
     ),
-    'erl' => array(
-        'cache' => array(
-            'db' => array(
-                'adapter'  => 'Zend\Db\Adapter\Adapter',
-                'profiler' => 'mutex_profile',
-                'logger'   => 'mutex_log',
-            ),
-        ),
-    ),
 );
