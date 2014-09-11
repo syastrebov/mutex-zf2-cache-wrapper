@@ -75,4 +75,12 @@ class Module
             ),
         );
     }
+
+    public function getConsoleUsage()
+    {
+        return [
+            'mutex generate map'       => 'Создание карты вызова блокировок',
+            'mutex clear profiler log' => 'Очистка таблицы профайлера',
+        ];
+    }
 } 
