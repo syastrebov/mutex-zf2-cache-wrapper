@@ -15,7 +15,7 @@ namespace ErlCache\Model;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\TableGateway\TableGateway;
 use ErlMutex\ProfilerStorageInterface;
-use ErlMutex\Model\ProfilerStack as ProfilerStackModel;
+use ErlMutex\Entity\Profiler\Stack as ProfilerStackEntity;
 use DateTime;
 
 /**
@@ -70,10 +70,10 @@ class ProfilerStorage implements ProfilerStorageInterface
     /**
      * Сохранить запись
      *
-     * @param ProfilerStackModel $model
+     * @param ProfilerStackEntity $model
      * @return bool
      */
-    public function insert(ProfilerStackModel $model)
+    public function insert(ProfilerStackEntity $model)
     {
         return $this->tableGateway->insert(array(
             'request_uri'  => $model->getRequestUri(),
@@ -99,7 +99,7 @@ class ProfilerStorage implements ProfilerStorageInterface
         $result = array();
         $rowSet = $this->tableGateway->select();
         foreach ($rowSet as $row) {
-            $result[] = new ProfilerStackModel(
+            $result[] = new ProfilerStackEntity(
                 $row['request_uri'],
                 $row['request_hash'],
                 $row['filename'],
