@@ -12,6 +12,7 @@
 
 namespace ErlCache;
 
+use ErlCache\Adapter\ZendCache;
 use ErlCache\Model\Logger;
 use ErlCache\Model\ProfilerStorage;
 use ErlCache\Service\CacheWrapper;
@@ -57,6 +58,9 @@ class Module
                     /** @var Adapter $dbAdapter */
                     $dbAdapter = $serviceManager->get($config['db']['adapter']);
 
+                    /** @var Cache\Storage\StorageInterface $cache */
+                    $cache = $serviceManager->get('Cache');
+
                     $mutexAdapter = new Dummy();
                     switch ($config['adapter']) {
                         case 'memcached':
@@ -64,6 +68,9 @@ class Module
                             break;
                         case 'socket':
                             $mutexAdapter = new Socket();
+                            break;
+                        case 'zend_cache':
+                            $mutexAdapter = new ZendCache($cache);
                             break;
                     }
 

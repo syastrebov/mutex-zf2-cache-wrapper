@@ -12,7 +12,7 @@
 
 namespace ErlCache\Adapter;
 
-use ErlMutex\Adapter\AdapterInterface;
+use ErlMutex\Adapter\AbstractCache;
 use Zend\Cache\Storage\StorageInterface;
 
 /**
@@ -21,10 +21,8 @@ use Zend\Cache\Storage\StorageInterface;
  * Class ZendCache
  * @package ErlCache\Adapter
  */
-class ZendCache implements AdapterInterface
+class ZendCache extends AbstractCache
 {
-    private $adapter;
-
     /**
      * Constructor
      *
