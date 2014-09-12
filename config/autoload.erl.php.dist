@@ -1,13 +1,15 @@
 <?php
 
-return array(
-    'erl' => array(
-        'cache' => array(
-            'db' => array(
+return [
+    'erl' => [
+        'cache' => [
+            'adapter'  => 'memcached', //(memcached|socket|zend_cache)
+            'profiler' => true,
+            'db'       => [
                 'adapter'  => 'Zend\Db\Adapter\Adapter',
                 'profiler' => 'mutex_profile',
                 'logger'   => 'mutex_log',
-            ),
-        ),
-    ),
-);
+            ],
+        ],
+    ],
+];

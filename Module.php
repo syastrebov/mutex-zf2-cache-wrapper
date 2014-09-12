@@ -15,6 +15,8 @@ namespace ErlCache;
 use ErlCache\Model\Logger;
 use ErlCache\Model\ProfilerStorage;
 use ErlCache\Service\CacheWrapper;
+use ErlMutex\Adapter\Dummy;
+use ErlMutex\Adapter\Memcached;
 use ErlMutex\Adapter\Socket;
 use ErlMutex\Service\Mutex;
 use ErlMutex\Service\Profiler;
@@ -47,21 +49,36 @@ class Module
         return array(
             'factories' => array(
                 'MutexService' => function(ServiceManager $serviceManager) {
-                    $config  = $serviceManager->get('Config');
-                    $config  = $config['erl']['cache'];
+                    $config = $serviceManager->get('Config');
+                    $config = $config['erl']['cache'];
+
                     /** @var Request $request */
-                    $request = $serviceManager->get('Request');
-                    /** @var Adapter $adapter */
-                    $adapter = $serviceManager->get($config['db']['adapter']);
+                    $request   = $serviceManager->get('Request');
+                    /** @var Adapter $dbAdapter */
+                    $dbAdapter = $serviceManager->get($config['db']['adapter']);
+
+                    $mutexAdapter = new Dummy();
+                    switch ($config['adapter']) {
+                        case 'memcached':
+                            $mutexAdapter = new Memcached(new \Memcached());
+                            break;
+                        case 'socket':
+                            $mutexAdapter = new Socket();
+                            break;
+                    }
 
                     $requestUri = $request instanceof Request ? $request->getUriString() : 'console';
-                    $mutex = new Mutex(new Socket());
+                    $mutex = new Mutex($mutexAdapter);
                     $mutex
-                        ->setLogger(new Logger(new TableGateway($config['db']['logger'], $adapter)))
-                        ->establishConnection()
-                        ->setProfiler(new Profiler($requestUri))
-                        ->getProfiler()
-                        ->setStorage(new ProfilerStorage(new TableGateway($config['db']['profiler'], $adapter)));
+                        ->setLogger(new Logger(new TableGateway($config['db']['logger'], $dbAdapter)))
+                        ->establishConnection();
+
+                    if ($config['profiler']) {
+                        $mutex
+                            ->setProfiler(new Profiler($requestUri))
+                            ->getProfiler()
+                            ->setStorage(new ProfilerStorage(new TableGateway($config['db']['profiler'], $dbAdapter)));
+                    }
 
                     return $mutex;
                 },
