@@ -15,6 +15,7 @@ namespace ErlCache;
 use ErlCache\Model\Logger;
 use ErlCache\Model\ProfilerStorage;
 use ErlCache\Service\CacheWrapper;
+use ErlMutex\Adapter\Socket;
 use ErlMutex\Service\Mutex;
 use ErlMutex\Service\Profiler;
 use Zend\Db\Adapter\Adapter;
@@ -54,7 +55,7 @@ class Module
                     $adapter = $serviceManager->get($config['db']['adapter']);
 
                     $requestUri = $request instanceof Request ? $request->getUriString() : 'console';
-                    $mutex = new Mutex();
+                    $mutex = new Mutex(new Socket());
                     $mutex
                         ->setLogger(new Logger(new TableGateway($config['db']['logger'], $adapter)))
                         ->establishConnection()
