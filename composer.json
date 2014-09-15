@@ -12,17 +12,17 @@
         "zendframework/zendframework": "2.3.*",
         "twig/twig": "1.*",
         "leafo/lessphp": "0.4.0",
-        "erl/mutex": "0.2.0"
+        "erl/mutex": "0.3.0"
     },
     "repositories": [{
         "type": "package",
         "package": {
             "name": "erl/mutex",
-            "version": "0.2.0",
+            "version": "0.3.0",
             "source": {
                 "url": "https://github.com/syastrebov/mutex-php.git",
                 "type": "git",
-                "reference": "v.0.2"
+                "reference": "v0.3"
             },
             "autoload": {
                 "psr-0": {
